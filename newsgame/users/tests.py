@@ -1,7 +1,8 @@
 from django.test import TestCase, SimpleTestCase, Client
+from django.urls import reverse, resolve
 from rest_framework.test import APITestCase
 from users.models import CustomUser
-from django.urls import reverse, resolve
+from users.forms import CustomUserCreationForm
 from users.views import index, highscores, world, level01, level02, level03, SignUp
 
 class CustomUserCreateTestCase(APITestCase):
@@ -137,3 +138,21 @@ class TestViews(TestCase):
     self.assertEquals(response.status_code, 200)
     self.assertTemplateUsed(response, 'level03.html')
 
+class TestModels(TestCase):
+  def test_custom_user(self):
+    CustomUser.objects.create(
+      username='John',
+      points='1000',
+      email='john@email.com',
+      password='somePassword_!3mr56x',
+      level='4'
+    )
+    self.assertEqual(CustomUser.objects.count(), 1)
+    CustomUser.objects.create(
+      username='Joan',
+      points='2000',
+      email='joan@email.com',
+      password='@no_th3rPw_3jo39',
+      level='2'
+    )
+    self.assertEqual(CustomUser.objects.count(), 2)
